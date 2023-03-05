@@ -24,7 +24,7 @@ option = st.selectbox(
 if st.button('Run Model'):
     with st.spinner('Wait for it...'):
         test = pd.read_parquet('ori_test_0218.parquet')
-        train = pd.read_parquet('capstone888/ori_train_0218.parquet')
+        train = pd.read_parquet('ori_train_0218.parquet')
         class_count_0, class_count_1 = train['target'].value_counts()
 
 # Separate class
