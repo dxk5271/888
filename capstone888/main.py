@@ -106,7 +106,7 @@ if st.button('Run Model'):
 
         # Evaluate the model
         test_loss, test_acc = model.evaluate(X_test, y_test, verbose=0)
-        print(f'Test loss: {test_loss} - Test accuracy: {test_acc}')
+        st.write(f'Test loss: {test_loss} - Test accuracy: {test_acc}')
 
 
 
