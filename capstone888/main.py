@@ -1,118 +1,82 @@
 import streamlit as st
 import pandas as pd
 import time
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers
 import scipy.io as sio
 from scipy.io import loadmat
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
-from keras.layers import Input, Dense, Dropout, Activation, BatchNormalization, Add
-from keras.layers import Conv1D, GlobalAveragePooling1D, MaxPool1D, ZeroPadding1D, LSTM, Bidirectional
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
-import matplotlib.pyplot as plt
-
-
-st.title("Capstone 888")
-
-option = st.selectbox(
-     'Select a Model',  
-    ('Neural Network', 'Logistic Regression', 'KNN'))
-
-if st.button('Run Model'):
-    with st.spinner('Wait for it...'):
-        test = pd.read_parquet('ori_test_0218.parquet')
-        train = pd.read_parquet('ori_train_0218.parquet')
-        class_count_0, class_count_1 = train['target'].value_counts()
-
-# Separate class
-        class_0 = train[train['target'] == 0]
-        class_1 = train[train['target'] == 1]
-
-        class_0_under = class_0.sample(class_count_1)
-
-        train = pd.concat([class_0_under, class_1], axis=0)
-
-
-        X_train = train.loc[:, train.columns != 'target']
-        y_train = train.loc[:, train.columns == 'target']
-
-        X_test = test.loc[:, test.columns != 'target']
-        y_test = test.loc[:, test.columns == 'target']
-
-
-        scaler = StandardScaler()
-        # fit scaler on data
-        scaler.fit(X_train)
-        # apply transform
-        X_train = scaler.transform(X_train)
-        X_test = scaler.transform(X_test)
-
-
-        #X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=1)
-
-        #X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=1)
-
-        print(len(X_train))
-        print(len(X_test))
-        print(len(X_val))
-
-
-        #X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.33, random_state=42)
 
 
 
+st.title("Predict Cardiac Abnormalities")
+
+sex = st.sidebar.radio(
+    "What is your sex",
+    ('Male', 'Female'))
 
 
-        
-        model = keras.Sequential([
-        layers.Dense(input_dim = 73, units = 32, activation = "relu"),
-        layers.Dense(units= 64, activation = "relu"),
-        layers.Dropout(0.2),
-        layers.Dense(units= 256, activation = "relu"),
-        layers.Dropout(0.2),
-        layers.Dense(units= 128, activation = "relu"),
-        layers.Dropout(0.3),
-        layers.Dense(units= 32, activation = "relu"),
-        layers.Dense(units=1, activation = "sigmoid")])
-        model.summary()
-        
-        
-        # Compile the model with categorical crossentropy loss function and the Adam optimizer
-        model.compile(loss='binary_crossentropy', optimizer='Adam', metrics=['accuracy'])
-        # Train the model using the fit() method
-        history = model.fit(X_train, y_train, epochs=25, batch_size=128, validation_data=(X_test, y_test))
+ghealth = st.sidebar.slider('Rate your general health', 0, 10)
+phealth = st.sidebar.slider('Rate your physical health', 0, 10)
+mhealth = st.sidebar.slider('Rate your mental health', 0, 10)
+activity = st.sidebar.slider('Rate how active you are', 0, 10)
+st.sidebar.write('Have you ever had or have the below?')
+bp_high = st.sidebar.radio("High Blood Pressure?", ('Yes', 'No'))
+cholesterol_high = st.sidebar.radio("High Cholesterol?", ('Yes', 'No'))
+stroke = st.sidebar.radio("Stroke?", ('Yes', 'No'))
+asthma = st.sidebar.radio("Asthma?", ('Yes', 'No'))
+cancer_skin = st.sidebar.radio("Skin Cancer?", ('Yes', 'No'))
+cancer = st.sidebar.radio("Any other type of cancer", ('Yes', 'No'))
+kidney_disease = st.sidebar.radio("Kidney Disease", ('Yes', 'No'))
 
+diabetes = st.sidebar.radio("Diabetes", ('Yes', 'No'))
+arthritis = st.sidebar.radio("Arthritis", ('Yes', 'No'))
+difficulty_walking = st.sidebar.radio("Difficulty Walking?", ('Yes', 'No'))
+smoker = st.sidebar.radio("Smoker", ('Yes', 'No'))
 
-
-
-        plt.plot(history.history['loss'])
-        plt.plot(history.history['val_loss']) 
-        plt.title('Model loss')
-        plt.ylabel('Loss')
-        plt.xlabel('Epoch')
-        plt.legend(['Train', 'Test'], loc='upper right')
-        plt.show()
-
-        plt.plot(history.history['accuracy'])
-        plt.plot(history.history['val_accuracy'])
-        plt.title('Model accuracy')
-        plt.ylabel('Accuracy')
-        plt.xlabel('Epoch')
-        plt.legend(['Train', 'Test'], loc='lower right')
-        plt.show()
-
-        # Evaluate the model
-        test_loss, test_acc = model.evaluate(X_test, y_test, verbose=0)
-        st.write(f'Test loss: {test_loss} - Test accuracy: {test_acc}')
+age = st.sidebar.slider('What is your age?', 18, 110)
+bmi = st.sidebar.slider('BMI?', 5, 50)
 
 
 
 
 
 
-   
 
 
+x = """
+sex                    438693 non-null  int32  
+ 1   general_health         438689 non-null  float64
+ 2   physical_health        438690 non-null  float64
+ 3   mental_health          438691 non-null  float64
+ 4   physical_activity      438693 non-null  int32  
+ 5   bp_high                438691 non-null  float64
+ 6   cholesterol_high       377857 non-null  float64
+ 7   stroke                 438691 non-null  float64
+ 8   asthma                 438693 non-null  int32  
+ 9   cancer_skin            438691 non-null  float64
+ 10  cancer_other           438690 non-null  float64
+ 11  kidney_disease         438690 non-null  float64
+ 12  diabetes               438690 non-null  float64
+ 13  arthritis              438690 non-null  float64
+ 14  difficulty_walking     420684 non-null  float64
+ 15  smoker                 417461 non-null  float64
+ 16  race **                  438693 non-null  int32  
+ 17  age                    438693 non-null  int32  
+ 18  bmi                    391841 non-null  float64
+ 19  education              438693 non-null  int32  
+ 20  income                 429846 non-null  float64
+ 21  alcohol_intake         407294 non-null  float64
+ 22  alcoholic              438693 non-null  int32  
+ 23  fruit_intake           404518 non-null  float64
+ 24  vegetable_intake       401698 non-null  float64
+ 25  french_fry_intake      400582 non-null  float64
+ 26  health_insurance       438693 non-null  int32  
+ 27  marital_status         438688 non-null  float64
+ 28  household_child_count  432558 non-null  float64
+ 29  vaccine_flu            411045 non-null  float64
+ 30  vaccine_pneumonia      409606 non-null  float64
+ 31  urban_status           431639 non-null  float64
+ 32  state                  438693 non-null  int32  
+ 33  target             
+
+ """
