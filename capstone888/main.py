@@ -61,22 +61,17 @@ def physical_activity_m(physical_activity):
 physical_activity_v = physical_activity_m(physical_activity)
 
 
-cholesterol_high = st.sidebar.radio("High Cholesterol?", ('Yes', 'No')) #1 is yes #2 no
 
-def cholesterol_high_m(cholesterol_high):
-    if cholesterol_high == 'Yes':
-        cholesterol_high_m = 1
-    else:
-        2
-    return cholesterol_high_m
 
-cholesterol_high_v = cholesterol_high_m(cholesterol_high)
+
 def yesno(var):
     if var == 'Yes':
         yesno = 1
     else:
         yesno = 2
     return yesno
+cholesterol_high = st.sidebar.radio("High Cholesterol?", ('Yes', 'No')) #1 is yes #2 no
+cholesterol_high_v = yesno(cholesterol_high)
 
 stroke = st.sidebar.radio("Stroke?", ('Yes', 'No'))
 stroke_v = yesno(stroke)
