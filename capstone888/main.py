@@ -9,6 +9,7 @@ import pickle
 import pandas as pd
 import numpy as np
 import lightgbm as lgbm
+import time
 
 from sklearn import metrics
 import time
@@ -18,6 +19,12 @@ from sklearn.model_selection import RepeatedStratifiedKFold
 
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.metrics import PrecisionRecallDisplay
+import streamlit as st
+from PIL import Image
+
+image = Image.open('heart.jpeg')
+
+st.sidebar.image(image)
 
 
 
@@ -119,7 +126,7 @@ def urban_status_m(urban_status):
 
 urban_status_v = urban_status_m(urban_status)
 
-ghealth = st.sidebar.slider('Rate your general health', 1, 5)
+ghealth = st.sidebar.slider('Rate your general health', 1, 4)
 
 if ghealth == 1:
     general_health_fair = 0
@@ -477,15 +484,11 @@ vegetable_intake_v = vegetable_intake
 french_fry_intake = st.sidebar.slider('French Fry intake in times per day', 0, 99)
 french_fry_intake_v = french_fry_intake
 
-education = st.sidebar.radio("Education Level", ('Did not graduate High School', 'High School', 'Attended College', 'Graduated College'))
+education = st.sidebar.radio("Education Level", ('High School', 'Attended College', 'Graduated College'))
 
-if education == 'Did not graduate High School':
 
-    education_1 = 1
-    education_2 = 0
-    education_3 = 0
-    education_4 = 0
-elif education == 'High School':
+
+if education == 'High School':
 
     education_1 = 0
     education_2 = 1
@@ -508,97 +511,94 @@ household_child_count = st.sidebar.slider('Children in Household', 0, 88)
 household_child_count_v = household_child_count
 
 
-modlist = []
-modlist.append(sex_v)
-modlist.append(physical_activity_v)
-modlist.append(cholesterol_high_v)
-modlist.append(stroke_v)
-modlist.append(asthma_v)
-modlist.append(cancer_skin_v)
-modlist.append(cancer_other_v)
-modlist.append(kidney_disease_v)
-modlist.append(arthritis_v)
-modlist.append(difficulty_walking_v)
-modlist.append(smoker_v)
-modlist.append(alcoholic_v)
-modlist.append(health_insurance_v)
-modlist.append(vaccine_flu_v)
-modlist.append(vaccine_pneumonia_v)
-modlist.append(urban_status_v)
-modlist.append(general_health_fair)
-modlist.append(general_health_good)
-modlist.append(general_health_verygood)
-modlist.append(general_health_excellent)
-modlist.append(education_2)
-modlist.append(education_3)
-modlist.append(education_4)
-modlist.append(age_2)
-modlist.append(age_3)
-modlist.append(age_4)
-modlist.append(age_5)
-modlist.append(age_6)
-modlist.append(age_7)
-modlist.append(age_8)
-modlist.append(age_9)
-modlist.append(age_10)
-modlist.append(age_11)
-modlist.append(age_12)
-modlist.append(age_13)
-modlist.append(income_2)
-modlist.append(income_3)
-modlist.append(income_4)
-modlist.append(income_5)
-modlist.append(income_6)
-modlist.append(income_7)
-modlist.append(income_8)
-modlist.append(income_9)
-modlist.append(income_10)
-modlist.append(income_11)
-modlist.append(bp_high_1)
-modlist.append(bp_high_2)
-modlist.append(bp_high_3)
-modlist.append(bp_high_4)
-modlist.append(diabetes_1)
-modlist.append(diabetes_2)
-modlist.append(diabetes_3)
-modlist.append(diabetes_4)
-modlist.append(race_1)
-modlist.append(race_2)
-modlist.append(race_3)
-modlist.append(race_4)
-modlist.append(race_5)
-modlist.append(race_6)
-modlist.append(marital_status_1)
-modlist.append(marital_status_2)
-modlist.append(marital_status_3)
-modlist.append(marital_status_4)
-modlist.append(marital_status_5)
-modlist.append(marital_status_6)
-modlist.append(phealth_v)
-modlist.append(mhealth_v)
-modlist.append(bmi_v)
-modlist.append(fruit_intake_v)
-modlist.append(vegetable_intake_v)
-modlist.append(fruit_intake_v)
-modlist.append(household_child_count_v)
-modlist.append(alcohol_intake_v)
 
-df = pd.DataFrame(modlist).T
-df.columns = [f"column{i+1}" for i in range(len(df.columns))]
 
-loaded_model = pickle.load(open('lgbm5.pkl', 'rb'))
-result = loaded_model.predict(df)
-st.write(df)
-st.write(modlist)
-st.write(type(result))
-test = 1 + result
-st.write('0---0')
-st.write(test)
-if st.button('Submit'):
-    if result == 1:
-        st.write("This Patient is at Risk For Heart Disease")
-    if result == 0:
-        st.write("This Patient is NOT at Risk For Heart Disease")
+with st.spinner('Calculating...'):
+    if st.button('Submit'):
+        modlist = []
+        modlist.append(sex_v)
+        modlist.append(physical_activity_v)
+        modlist.append(cholesterol_high_v)
+        modlist.append(stroke_v)
+        modlist.append(asthma_v)
+        modlist.append(cancer_skin_v)
+        modlist.append(cancer_other_v)
+        modlist.append(kidney_disease_v)
+        modlist.append(arthritis_v)
+        modlist.append(difficulty_walking_v)
+        modlist.append(smoker_v)
+        modlist.append(alcoholic_v)
+        modlist.append(health_insurance_v)
+        modlist.append(vaccine_flu_v)
+        modlist.append(vaccine_pneumonia_v)
+        modlist.append(urban_status_v)
+        modlist.append(general_health_fair)
+        modlist.append(general_health_good)
+        modlist.append(general_health_verygood)
+        modlist.append(general_health_excellent)
+        modlist.append(education_2)
+        modlist.append(education_3)
+        modlist.append(education_4)
+        modlist.append(age_2)
+        modlist.append(age_3)
+        modlist.append(age_4)
+        modlist.append(age_5)
+        modlist.append(age_6)
+        modlist.append(age_7)
+        modlist.append(age_8)
+        modlist.append(age_9)
+        modlist.append(age_10)
+        modlist.append(age_11)
+        modlist.append(age_12)
+        modlist.append(age_13)
+        modlist.append(income_2)
+        modlist.append(income_3)
+        modlist.append(income_4)
+        modlist.append(income_5)
+        modlist.append(income_6)
+        modlist.append(income_7)
+        modlist.append(income_8)
+        modlist.append(income_9)
+        modlist.append(income_10)
+        modlist.append(income_11)
+        modlist.append(bp_high_1)
+        modlist.append(bp_high_2)
+        modlist.append(bp_high_3)
+        modlist.append(bp_high_4)
+        modlist.append(diabetes_1)
+        modlist.append(diabetes_2)
+        modlist.append(diabetes_3)
+        modlist.append(diabetes_4)
+        modlist.append(race_1)
+        modlist.append(race_2)
+        modlist.append(race_3)
+        modlist.append(race_4)
+        modlist.append(race_5)
+        modlist.append(race_6)
+        modlist.append(marital_status_1)
+        modlist.append(marital_status_2)
+        modlist.append(marital_status_3)
+        modlist.append(marital_status_4)
+        modlist.append(marital_status_5)
+        modlist.append(marital_status_6)
+        modlist.append(phealth_v)
+        modlist.append(mhealth_v)
+        modlist.append(bmi_v)
+        modlist.append(fruit_intake_v)
+        modlist.append(vegetable_intake_v)
+        modlist.append(fruit_intake_v)
+        modlist.append(household_child_count_v)
+        modlist.append(alcohol_intake_v)
+
+        df = pd.DataFrame(modlist).T
+        df.columns = [f"column{i+1}" for i in range(len(df.columns))]
+
+        loaded_model = pickle.load(open('lgbm5.pkl', 'rb'))
+        result = loaded_model.predict(df)
+        if result == 1:
+            st.write("This Patient is at Risk For Heart Disease")
+        if result == 0:
+            st.write("This Patient is NOT at Risk For Heart Disease")
 
 
 
