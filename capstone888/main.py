@@ -596,7 +596,14 @@ df.columns = [f"column{i+1}" for i in range(len(df.columns))]
 
 loaded_model = pickle.load(open('lgbm5.pkl', 'rb'))
 result = loaded_model.predict(df)
-st.write(result)
+prob = loaded_model.predict_proba
+if result == 1:
+    st.write("This Patient is at Risk For Heart Disease")
+    st.write("Probability" + str(prob))
+if result == 0:
+    st.write("This Patient is NOT at Risk For Heart Disease")
+    st.write("Probability" + str(prob))
+
 
 
 
