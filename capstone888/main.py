@@ -41,7 +41,7 @@ st.sidebar.write('Have you ever had or have the below?')
 
 
 
-state = st.sidebar.radio("State", ('X', 'Y'))
+#state = st.sidebar.radio("State", ('X', 'Y'))
 
 
 
