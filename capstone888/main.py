@@ -421,7 +421,7 @@ elif race == 'Other':
     race_5 = 0
     race_6 = 0 
        
-marital_status = st.sidebar.radio("Martial Status", ('Married', 'Divorce', 'Widowed','Seperated',' Never Married','Unmarried Couple'))
+marital_status = st.sidebar.radio("Martial Status", ('Married', 'Divorce', 'Widowed','Seperated','Never Married','Unmarried Couple'))
 
 if marital_status == 'Married':
      marital_status_1 = 1 
