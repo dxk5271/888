@@ -35,10 +35,7 @@ st.sidebar.write('Have you ever had or have the below?')
 
 
 state = st.sidebar.radio("State", ('X', 'Y'))
-if st.sidebar.button('Submit'):
-    st.write('')
-    st.write('')
-    st.write('You are at risk for heart disease')
+
 
 
 sex = st.sidebar.radio("What is your sex", ('Male', 'Female'))
@@ -591,13 +588,17 @@ df.columns = [f"column{i+1}" for i in range(len(df.columns))]
 
 loaded_model = pickle.load(open('lgbm5.pkl', 'rb'))
 result = loaded_model.predict(df)
-prob = loaded_model.predict_proba
-if result == 1:
-    st.write("This Patient is at Risk For Heart Disease")
-    st.write("Probability" + str(prob))
-if result == 0:
-    st.write("This Patient is NOT at Risk For Heart Disease")
-    st.write("Probability" + str(prob))
+st.write(df)
+st.write(modlist)
+st.write(type(result))
+test = 1 + result
+st.write('0---0')
+st.write(test)
+if st.button('Submit'):
+    if result == 1:
+        st.write("This Patient is at Risk For Heart Disease")
+    if result == 0:
+        st.write("This Patient is NOT at Risk For Heart Disease")
 
 
 
