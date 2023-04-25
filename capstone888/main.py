@@ -25,7 +25,7 @@ from PIL import Image
 image = Image.open('heart.jpeg')
 
 st.sidebar.image(image)
-
+print('hi')
 
 st.title("Are you at risk for heart disease?")
 st.markdown("""
